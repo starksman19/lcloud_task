@@ -8,10 +8,10 @@ load_dotenv()
 
 
 def get_s3_client():
-    return boto3.client("s3")
+    return boto3.client("s3")  # boto3 should get all credentials from ENV variables
 
 
-def list_files(s3_client, bucket_name):
+def list_files(s3_client, bucket_name: str):
     response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix="b-wing/")
     if "Contents" in response:
         for obj in response["Contents"]:
@@ -20,7 +20,7 @@ def list_files(s3_client, bucket_name):
         print("No files found or bucket is empty")
 
 
-def upload_file(s3_client, bucket_name, local_file, s3_key):
+def upload_file(s3_client, bucket_name: str, local_file: str, s3_key: str):
     try:
         s3_key_in_b_wing = (
             f"b-wing/{s3_key}"
@@ -31,7 +31,7 @@ def upload_file(s3_client, bucket_name, local_file, s3_key):
         print(f"Failed to upload: {str(e)}")
 
 
-def list_files_matching_regex(s3_client, bucket_name, regex):
+def list_files_matching_regex(s3_client, bucket_name: str, regex: str):
     response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix="b-wing/")
     pattern = re.compile(regex)
     if "Contents" in response:
@@ -46,7 +46,7 @@ def list_files_matching_regex(s3_client, bucket_name, regex):
         print("No files found or bucket is empty")
 
 
-def delete_files_matching_regex(s3_client, bucket_name, regex):
+def delete_files_matching_regex(s3_client, bucket_name: str, regex: str):
     response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix="b-wing/")
     pattern = re.compile(regex)
     if "Contents" in response:
